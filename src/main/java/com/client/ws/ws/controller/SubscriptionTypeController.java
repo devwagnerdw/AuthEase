@@ -1,5 +1,6 @@
 package com.client.ws.ws.controller;
 
+import com.client.ws.ws.Service.SubscriptionTypeService;
 import com.client.ws.ws.model.SubscriptionType;
 import com.client.ws.ws.repository.SubscriptionTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,10 @@ import java.util.List;
 public class SubscriptionTypeController {
 
     @Autowired
-    private SubscriptionTypeRepository subscriptionTypeRepository;
+    private SubscriptionTypeService subscriptionTypeService;
 
     @GetMapping()
     public ResponseEntity<List<SubscriptionType>> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(subscriptionTypeRepository.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(subscriptionTypeService.findAll());
     }
 }
