@@ -2,6 +2,7 @@ package com.client.ws.ws.Service.impl.SubscriptionTypeService;
 
 
 import com.client.ws.ws.Service.SubscriptionTypeService;
+import com.client.ws.ws.exception.NotFoudException;
 import com.client.ws.ws.model.SubscriptionType;
 import com.client.ws.ws.repository.SubscriptionTypeRepository;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
 
         Optional<SubscriptionType> optionalSubscriptionType = subscriptionTypeRepository.findById(id);
         if (optionalSubscriptionType.isEmpty()) {
-            return null;
+            throw new NotFoudException("SubscriptionType não encontrado");
         }
         return optionalSubscriptionType.get();
     }
