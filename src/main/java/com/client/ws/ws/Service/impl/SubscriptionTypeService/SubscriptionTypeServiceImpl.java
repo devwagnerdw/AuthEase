@@ -3,12 +3,14 @@ package com.client.ws.ws.Service.impl.SubscriptionTypeService;
 
 import com.client.ws.ws.Service.SubscriptionTypeService;
 import com.client.ws.ws.dto.SubscriptionTypeDto;
+import com.client.ws.ws.exception.BadRequestException;
 import com.client.ws.ws.exception.NotFoudException;
 import com.client.ws.ws.model.SubscriptionType;
 import com.client.ws.ws.repository.SubscriptionTypeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -36,6 +38,9 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
     }
 
     public SubscriptionType create(SubscriptionTypeDto dto) {
+        if (Objects.nonNull(dto.getId())) {
+            throw new BadRequestException("Id deve ser nulo");
+        }
         return subscriptionTypeRepository.save(SubscriptionType.builder()
                 .id(dto.getId())
                 .name(dto.getName())
