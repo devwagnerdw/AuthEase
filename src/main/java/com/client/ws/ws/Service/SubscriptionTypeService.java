@@ -1,5 +1,6 @@
 package com.client.ws.ws.Service;
 
+import com.client.ws.ws.dto.SubscriptionTypeDto;
 import com.client.ws.ws.model.SubscriptionType;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface SubscriptionTypeService {
 
     SubscriptionType findById(Long id);
 
-    SubscriptionType create(SubscriptionType subscriptionType);
+    SubscriptionType create(SubscriptionTypeDto dto);
 
     SubscriptionType update(Long id, SubscriptionType subscriptionType);
 

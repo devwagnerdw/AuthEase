@@ -1,5 +1,6 @@
 package com.client.ws.ws.model;
 
+import com.client.ws.ws.dto.SubscriptionTypeDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
 @Entity
 public class SubscriptionType implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subscriptions_type_id")
     private Long id;
     private String name;
@@ -24,6 +25,5 @@ public class SubscriptionType implements Serializable {
     private BigDecimal price;
     @Column(name = "product_key")
     private String productKey;
-
 
 }

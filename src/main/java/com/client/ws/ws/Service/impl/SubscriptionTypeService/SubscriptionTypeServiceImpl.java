@@ -2,6 +2,7 @@ package com.client.ws.ws.Service.impl.SubscriptionTypeService;
 
 
 import com.client.ws.ws.Service.SubscriptionTypeService;
+import com.client.ws.ws.dto.SubscriptionTypeDto;
 import com.client.ws.ws.exception.NotFoudException;
 import com.client.ws.ws.model.SubscriptionType;
 import com.client.ws.ws.repository.SubscriptionTypeRepository;
@@ -34,9 +35,14 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
         return optionalSubscriptionType.get();
     }
 
-    @Override
-    public SubscriptionType create(SubscriptionType subscriptionType) {
-        return null;
+    public SubscriptionType create(SubscriptionTypeDto dto) {
+        return subscriptionTypeRepository.save(SubscriptionType.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .accessMonth(dto.getAccessMonth())
+                .price(dto.getPrice())
+                .productKey(dto.getProductKey())
+                .build());
     }
 
     @Override

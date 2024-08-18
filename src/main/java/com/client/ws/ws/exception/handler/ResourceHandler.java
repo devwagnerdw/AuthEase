@@ -1,8 +1,5 @@
 package com.client.ws.ws.exception.handler;
 
-
-
-
 import com.client.ws.ws.exception.NotFoudException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
