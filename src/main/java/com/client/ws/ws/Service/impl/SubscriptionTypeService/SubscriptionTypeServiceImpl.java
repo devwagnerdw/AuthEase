@@ -5,6 +5,7 @@ import com.client.ws.ws.Service.SubscriptionTypeService;
 import com.client.ws.ws.dto.SubscriptionTypeDto;
 import com.client.ws.ws.exception.BadRequestException;
 import com.client.ws.ws.exception.NotFoudException;
+import com.client.ws.ws.mapper.SubscriptionTypeMapper;
 import com.client.ws.ws.model.SubscriptionType;
 import com.client.ws.ws.repository.SubscriptionTypeRepository;
 import org.springframework.stereotype.Service;
@@ -36,26 +37,15 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
         if (Objects.nonNull(dto.getId())) {
             throw new BadRequestException("Id deve ser nulo");
         }
-        return subscriptionTypeRepository.save(SubscriptionType.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .accessMonth(dto.getAccessMonth())
-                .price(dto.getPrice())
-                .productKey(dto.getProductKey())
-                .build());
+        return subscriptionTypeRepository.save(SubscriptionTypeMapper.fromDtoToEntity(dto));
     }
 
     @Override
     public SubscriptionType update(Long id, SubscriptionTypeDto dto) {
         getSubscriptionType(id);
+        dto.setId(id);
 
-        return subscriptionTypeRepository.save(SubscriptionType.builder()
-                .id(id)
-                .name(dto.getName())
-                .accessMonth(dto.getAccessMonth())
-                .price(dto.getPrice())
-                .productKey(dto.getProductKey())
-                .build());
+        return subscriptionTypeRepository.save(SubscriptionTypeMapper.fromDtoToEntity(dto));
     }
 
     @Override
