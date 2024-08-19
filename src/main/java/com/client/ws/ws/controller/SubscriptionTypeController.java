@@ -3,6 +3,7 @@ package com.client.ws.ws.controller;
 import com.client.ws.ws.Service.SubscriptionTypeService;
 import com.client.ws.ws.dto.SubscriptionTypeDto;
 import com.client.ws.ws.model.SubscriptionType;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +29,12 @@ public class SubscriptionTypeController {
     }
 
     @PostMapping
-    public ResponseEntity<SubscriptionType> create(@RequestBody SubscriptionTypeDto dto) {
+    public ResponseEntity<SubscriptionType> create(@Valid @RequestBody SubscriptionTypeDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(subscriptionTypeService.create(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SubscriptionType> create(@PathVariable("id") Long id, @RequestBody SubscriptionTypeDto dto) {
+    public ResponseEntity<SubscriptionType> update(@PathVariable("id") Long id, @RequestBody SubscriptionTypeDto dto) {
         return ResponseEntity.status(HttpStatus.OK).body(subscriptionTypeService.update(id, dto));
     }
 
