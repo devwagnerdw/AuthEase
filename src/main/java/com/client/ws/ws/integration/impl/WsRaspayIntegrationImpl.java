@@ -1,6 +1,6 @@
-package com.client.ws.ws.dto.integration.impl;
+package com.client.ws.ws.integration.impl;
 
-import com.client.ws.ws.dto.integration.WsRaspayIntegration;
+import com.client.ws.ws.integration.WsRaspayIntegration;
 import com.client.ws.ws.dto.wsraspay.CustomerDto;
 import com.client.ws.ws.dto.wsraspay.OrderDto;
 import com.client.ws.ws.dto.wsraspay.PaymentDto;
@@ -17,17 +17,18 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+    private final HttpHeaders headers;
 
     public WsRaspayIntegrationImpl(){
         restTemplate = new RestTemplate();
+        headers = getHttpHeaders();
     }
 
     @Override
     public CustomerDto createCustomer(CustomerDto dto) {
         try {
-            HttpHeaders headers = getHttpHeaders();
-            HttpEntity<CustomerDto> request = new HttpEntity<>(dto,headers);
+            HttpEntity<CustomerDto> request = new HttpEntity<>(dto,this.headers);
             ResponseEntity<CustomerDto> response =
                     restTemplate.exchange("http://localhost:8081/ws-raspay/v1/customer", HttpMethod.POST, request, CustomerDto.class);
             return response.getBody();
@@ -38,7 +39,14 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
 
     @Override
     public OrderDto createOrder(OrderDto dto) {
-        return null;
+        try {
+            HttpEntity<OrderDto> request = new HttpEntity<>(dto,this.headers);
+            ResponseEntity<OrderDto> response =
+                    restTemplate.exchange("http://localhost:8081/ws-raspay/v1/order", HttpMethod.POST, request, OrderDto.class);
+            return response.getBody();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override

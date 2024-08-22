@@ -1,4 +1,4 @@
-package com.client.ws.ws.dto.integration;
+package com.client.ws.ws.integration;
 
 
 import com.client.ws.ws.dto.wsraspay.CustomerDto;
