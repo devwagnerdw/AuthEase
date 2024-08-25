@@ -1,4 +1,4 @@
-package com.client.ws.ws.Service.impl.SubscriptionTypeService;
+package com.client.ws.ws.Service.impl;
 
 
 import com.client.ws.ws.Service.SubscriptionTypeService;
