@@ -21,6 +21,8 @@ public class UserPaymentInfoDto {
 
     private Long id;
 
+    private Long installments;
+
     @Size(min = 16, max = 16, message = "deve conter 16 caracteres")
     private String cardNumber;
 

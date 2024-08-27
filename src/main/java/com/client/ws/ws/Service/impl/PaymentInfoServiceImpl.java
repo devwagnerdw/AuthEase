@@ -6,12 +6,15 @@ import com.client.ws.ws.dto.PaymentProcessDto;
 
 import com.client.ws.ws.dto.wsraspay.CustomerDto;
 import com.client.ws.ws.dto.wsraspay.OrderDto;
+import com.client.ws.ws.dto.wsraspay.PaymentDto;
 import com.client.ws.ws.exception.BusinessException;
 import com.client.ws.ws.exception.NotFoudException;
 import com.client.ws.ws.integration.WsRaspayIntegration;
 import com.client.ws.ws.mapper.UserPaymentInfoMapper;
+import com.client.ws.ws.mapper.wsraspey.CreditCardMapper;
 import com.client.ws.ws.mapper.wsraspey.CustomerMapper;
 import com.client.ws.ws.mapper.wsraspey.OrderMapper;
+import com.client.ws.ws.mapper.wsraspey.PaymentMapper;
 import com.client.ws.ws.model.User;
 import com.client.ws.ws.model.UserPaymentInfo;
 import com.client.ws.ws.repository.UserPaymentInfoRepository;
@@ -37,7 +40,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
     @Override
     public Boolean process(PaymentProcessDto dto) {
-        //verifica usuario por id
+        //verifica usuario por id e verifica se já existe assinatura
         var userOpt = userRepository.findById(dto.getUserPaymentInfoDto().getUserId());
         if(userOpt.isEmpty()) {
             throw new NotFoudException("Usuário não encontrado");
@@ -46,8 +49,6 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         if(Objects.nonNull(user.getSubscriptionType())) {
             throw new BusinessException("Pagamento não pode ser processado pois usuário já possui assinatura");
         }
-
-
         //cria ou atualiza usuario raspay
         CustomerDto customerDto = wsRaspayIntegration.createCustomer(CustomerMapper.build(user));
 
@@ -55,11 +56,14 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         OrderDto orderDto = wsRaspayIntegration.createOrder(OrderMapper.build(customerDto.getId(),dto));
 
         //processa o pagamento
+        PaymentDto paymentDto =  PaymentMapper.build(customerDto.getId(), orderDto.getId(), CreditCardMapper.build(dto.getUserPaymentInfoDto(), user.getCpf()));
+        Boolean successPayment = wsRaspayIntegration.processPayment(paymentDto);
 
-        //salvar informacoes de pagamento
-        UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(),user);
-        userPaymentInfoRepository.save(userPaymentInfo);
-
+        if (successPayment) {
+            //salvar informacoes de pagamento
+            UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(), user);
+            userPaymentInfoRepository.save(userPaymentInfo);
+        }
         //enviar email de criacao de conta
         //retorna o sucesso ou nao do pagamento
 
