@@ -6,7 +6,10 @@ import com.client.ws.ws.dto.PaymentProcessDto;
 
 import com.client.ws.ws.exception.BusinessException;
 import com.client.ws.ws.exception.NotFoudException;
+import com.client.ws.ws.mapper.UserPaymentInfoMapper;
 import com.client.ws.ws.model.User;
+import com.client.ws.ws.model.UserPaymentInfo;
+import com.client.ws.ws.repository.UserPaymentInfoRepository;
 import com.client.ws.ws.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +20,11 @@ import java.util.Objects;
 public class PaymentInfoServiceImpl implements PaymentInfoService {
 
     private final UserRepository userRepository;
+    private final UserPaymentInfoRepository userPaymentInfoRepository;
 
-    PaymentInfoServiceImpl(UserRepository userRepository){
+    PaymentInfoServiceImpl(UserRepository userRepository, UserPaymentInfoRepository userPaymentInfoRepository){
         this.userRepository = userRepository;
+        this.userPaymentInfoRepository = userPaymentInfoRepository;
     }
 
     @Override
@@ -34,6 +39,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             throw new BusinessException("Pagamento não pode ser processado pois usuário já possui assinatura");
         }
         //salvar informacoes de pagamento
+        UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(),user);
+        userPaymentInfoRepository.save(userPaymentInfo);
+
         //cria ou atualiza usuario raspay
         //cria o pedido de pagamento
         //processa o pagamento
