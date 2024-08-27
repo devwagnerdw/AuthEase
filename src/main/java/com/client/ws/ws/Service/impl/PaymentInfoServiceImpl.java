@@ -5,11 +5,13 @@ import com.client.ws.ws.Service.PaymentInfoService;
 import com.client.ws.ws.dto.PaymentProcessDto;
 
 import com.client.ws.ws.dto.wsraspay.CustomerDto;
+import com.client.ws.ws.dto.wsraspay.OrderDto;
 import com.client.ws.ws.exception.BusinessException;
 import com.client.ws.ws.exception.NotFoudException;
 import com.client.ws.ws.integration.WsRaspayIntegration;
 import com.client.ws.ws.mapper.UserPaymentInfoMapper;
 import com.client.ws.ws.mapper.wsraspey.CustomerMapper;
+import com.client.ws.ws.mapper.wsraspey.OrderMapper;
 import com.client.ws.ws.model.User;
 import com.client.ws.ws.model.UserPaymentInfo;
 import com.client.ws.ws.repository.UserPaymentInfoRepository;
@@ -48,8 +50,10 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
         //cria ou atualiza usuario raspay
         CustomerDto customerDto = wsRaspayIntegration.createCustomer(CustomerMapper.build(user));
-        
+
         //cria o pedido de pagamento
+        OrderDto orderDto = wsRaspayIntegration.createOrder(OrderMapper.build(customerDto.getId(),dto));
+
         //processa o pagamento
 
         //salvar informacoes de pagamento
