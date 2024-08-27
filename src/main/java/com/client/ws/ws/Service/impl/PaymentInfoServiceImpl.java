@@ -4,9 +4,12 @@ package com.client.ws.ws.Service.impl;
 import com.client.ws.ws.Service.PaymentInfoService;
 import com.client.ws.ws.dto.PaymentProcessDto;
 
+import com.client.ws.ws.dto.wsraspay.CustomerDto;
 import com.client.ws.ws.exception.BusinessException;
 import com.client.ws.ws.exception.NotFoudException;
+import com.client.ws.ws.integration.WsRaspayIntegration;
 import com.client.ws.ws.mapper.UserPaymentInfoMapper;
+import com.client.ws.ws.mapper.wsraspey.CustomerMapper;
 import com.client.ws.ws.model.User;
 import com.client.ws.ws.model.UserPaymentInfo;
 import com.client.ws.ws.repository.UserPaymentInfoRepository;
@@ -21,10 +24,13 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
     private final UserRepository userRepository;
     private final UserPaymentInfoRepository userPaymentInfoRepository;
+    private final WsRaspayIntegration wsRaspayIntegration;
 
-    PaymentInfoServiceImpl(UserRepository userRepository, UserPaymentInfoRepository userPaymentInfoRepository){
+    PaymentInfoServiceImpl(UserRepository userRepository, UserPaymentInfoRepository userPaymentInfoRepository,
+                           WsRaspayIntegration wsRaspayIntegration){
         this.userRepository = userRepository;
         this.userPaymentInfoRepository = userPaymentInfoRepository;
+        this.wsRaspayIntegration = wsRaspayIntegration;
     }
 
     @Override
@@ -38,13 +44,18 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         if(Objects.nonNull(user.getSubscriptionType())) {
             throw new BusinessException("Pagamento não pode ser processado pois usuário já possui assinatura");
         }
+
+
+        //cria ou atualiza usuario raspay
+        CustomerDto customerDto = wsRaspayIntegration.createCustomer(CustomerMapper.build(user));
+        
+        //cria o pedido de pagamento
+        //processa o pagamento
+
         //salvar informacoes de pagamento
         UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(),user);
         userPaymentInfoRepository.save(userPaymentInfo);
 
-        //cria ou atualiza usuario raspay
-        //cria o pedido de pagamento
-        //processa o pagamento
         //enviar email de criacao de conta
         //retorna o sucesso ou nao do pagamento
 
