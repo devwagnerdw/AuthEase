@@ -21,8 +21,6 @@ public class UserPaymentInfoDto {
 
     private Long id;
 
-    private Long installments;
-
     @Size(min = 16, max = 16, message = "deve conter 16 caracteres")
     private String cardNumber;
 
@@ -38,6 +36,8 @@ public class UserPaymentInfoDto {
     private BigDecimal price;
 
     private LocalDate dtPayment = LocalDate.now();
+
+    private Long installments;
 
     @NotNull(message = "deve ser informado")
     private Long userId;

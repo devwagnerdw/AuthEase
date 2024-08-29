@@ -20,10 +20,13 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
 
     @Value("${webservices.raspay.host}")
     private String raspayHost;
+
     @Value("${webservices.raspay.v1.customer}")
     private String customerUrl;
+
     @Value("${webservices.raspay.v1.order}")
     private String orderUrl;
+
     @Value("${webservices.raspay.v1.payment}")
     private String paymentUrl;
 
