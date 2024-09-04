@@ -17,9 +17,12 @@ import com.client.ws.ws.mapper.wsraspey.CustomerMapper;
 import com.client.ws.ws.mapper.wsraspey.OrderMapper;
 import com.client.ws.ws.mapper.wsraspey.PaymentMapper;
 import com.client.ws.ws.model.User;
+import com.client.ws.ws.model.UserCredentials;
 import com.client.ws.ws.model.UserPaymentInfo;
+import com.client.ws.ws.repository.UserDetailsRepository;
 import com.client.ws.ws.repository.UserPaymentInfoRepository;
 import com.client.ws.ws.repository.UserRepository;
+import com.client.ws.ws.repository.UserTypeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -27,17 +30,25 @@ import java.util.Objects;
 
 @Service
 public class PaymentInfoServiceImpl implements PaymentInfoService {
+
+    private final Long ALUNO = 3L;
+
     private final UserRepository userRepository;
     private final UserPaymentInfoRepository userPaymentInfoRepository;
     private final WsRaspayIntegration wsRaspayIntegration;
-    private final MailIntegration mailintegration;
+    private final MailIntegration mailIntegration;
+    private final UserDetailsRepository userDetailsRepository;
+    private final UserTypeRepository userTypeRepository;
 
     PaymentInfoServiceImpl(UserRepository userRepository, UserPaymentInfoRepository userPaymentInfoRepository,
-                           WsRaspayIntegration wsRaspayIntegration, MailIntegration mailintegration){
+                           WsRaspayIntegration wsRaspayIntegration, MailIntegration mailIntegration,
+                           UserDetailsRepository userDetailsRepository, UserTypeRepository userTypeRepository){
         this.userRepository = userRepository;
         this.userPaymentInfoRepository = userPaymentInfoRepository;
         this.wsRaspayIntegration = wsRaspayIntegration;
-        this.mailintegration = mailintegration;
+        this.mailIntegration = mailIntegration;
+        this.userDetailsRepository = userDetailsRepository;
+        this.userTypeRepository = userTypeRepository;
     }
 
     @Override
@@ -62,7 +73,16 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             //salvar informacoes de pagamento
             UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(), user);
             userPaymentInfoRepository.save(userPaymentInfo);
-            mailintegration.send(user.getEmail(),"Usuario: "+ user.getEmail()+" - Senha: alunorasmoo","Acesso liberado");
+
+            var userTypeOpt = userTypeRepository.findById(ALUNO);
+
+            if (userTypeOpt.isEmpty()) {
+                throw new NotFoudException("UseType não encontrado");
+            }
+            UserCredentials userCredentials = new UserCredentials(null, user.getName(), "alunorasmoo",userTypeOpt.get());
+            userDetailsRepository.save(userCredentials);
+
+            mailIntegration.send(user.getEmail(),"Usuario: "+ user.getEmail()+" - Senha: alunorasmoo","Acesso liberado");
             return true;
         }
         //enviar email de criacao de conta

@@ -23,7 +23,6 @@ public class WebSecurityConfig {
     @Autowired
     private UserDetailsRepository userDetailsRepository;
 
-    // Responsável pela configuração de autorização -> Acesso a URLs
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
