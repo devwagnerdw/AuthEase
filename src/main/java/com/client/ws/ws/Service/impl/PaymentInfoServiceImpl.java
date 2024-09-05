@@ -25,6 +25,7 @@ import com.client.ws.ws.repository.UserPaymentInfoRepository;
 import com.client.ws.ws.repository.UserRepository;
 import com.client.ws.ws.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -33,8 +34,8 @@ import java.util.Objects;
 @Service
 public class PaymentInfoServiceImpl implements PaymentInfoService {
 
-    @Value("${webservices.rasplus.customer.password}")
-    private String customerPass;
+    @Value("${webservices.rasplus.default.password}")
+    private String defaultPass;
 
     private final UserRepository userRepository;
     private final UserPaymentInfoRepository userPaymentInfoRepository;
@@ -77,12 +78,12 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             var userTypeOpt = userTypeRepository.findById(UserTypeEnum.ALUNO.getId());
 
             if (userTypeOpt.isEmpty()) {
-                throw new NotFoudException("UseType não encontrado");
+                throw new NotFoudException("UserType não encontrado");
             }
-            UserCredentials userCredentials = new UserCredentials(null, user.getName(), customerPass, userTypeOpt.get());
+            UserCredentials userCredentials = new UserCredentials(null, user.getEmail(),new BCryptPasswordEncoder().encode(defaultPass), userTypeOpt.get());
             userDetailsRepository.save(userCredentials);
 
-            mailIntegration.send(user.getEmail(), "Usuario: " + user.getEmail() + " - Senha: " + customerPass, "Acesso liberado");
+            mailIntegration.send(user.getEmail(), "Usuario: " + user.getEmail() + " - Senha: " + defaultPass, "Acesso liberado");
             return true;
         }
 
