@@ -20,10 +20,7 @@ import com.client.ws.ws.mapper.wsraspey.PaymentMapper;
 import com.client.ws.ws.model.User;
 import com.client.ws.ws.model.UserCredentials;
 import com.client.ws.ws.model.UserPaymentInfo;
-import com.client.ws.ws.repository.UserDetailsRepository;
-import com.client.ws.ws.repository.UserPaymentInfoRepository;
-import com.client.ws.ws.repository.UserRepository;
-import com.client.ws.ws.repository.UserTypeRepository;
+import com.client.ws.ws.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,16 +40,18 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     private final MailIntegration mailIntegration;
     private final UserDetailsRepository userDetailsRepository;
     private final UserTypeRepository userTypeRepository;
+    private final SubscriptionTypeRepository subscriptionTypeRepository;
 
     PaymentInfoServiceImpl(UserRepository userRepository, UserPaymentInfoRepository userPaymentInfoRepository,
                            WsRaspayIntegration wsRaspayIntegration, MailIntegration mailIntegration,
-                           UserDetailsRepository userDetailsRepository, UserTypeRepository userTypeRepository) {
+                           UserDetailsRepository userDetailsRepository, UserTypeRepository userTypeRepository, SubscriptionTypeRepository subscriptionTypeRepository) {
         this.userRepository = userRepository;
         this.userPaymentInfoRepository = userPaymentInfoRepository;
         this.wsRaspayIntegration = wsRaspayIntegration;
         this.mailIntegration = mailIntegration;
         this.userDetailsRepository = userDetailsRepository;
         this.userTypeRepository = userTypeRepository;
+        this.subscriptionTypeRepository=subscriptionTypeRepository;
     }
     @Override
     public Boolean process(PaymentProcessDto dto) {
@@ -66,10 +65,11 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             throw new BusinessException("Pagamento não pode ser processado pois usuário já possui assinatura");
         }
 
-        CustomerDto customerDto = wsRaspayIntegration.createCustomer(CustomerMapper.build(user));
-        OrderDto orderDto = wsRaspayIntegration.createOrder(OrderMapper.build(customerDto.getId(), dto));
-        PaymentDto paymentDto = PaymentMapper.build(customerDto.getId(), orderDto.getId(), CreditCardMapper.build(dto.getUserPaymentInfoDto(), user.getCpf()));
-        Boolean successPayment = wsRaspayIntegration.processPayment(paymentDto);
+        Boolean successPayment = getSucessPayment(dto, user);
+        return createUserCredentials(dto, user, successPayment);
+    }
+
+    private boolean createUserCredentials(PaymentProcessDto dto, User user, Boolean successPayment) {
 
         if (Boolean.TRUE.equals(successPayment)) {
             UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(), user);
@@ -83,10 +83,25 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             UserCredentials userCredentials = new UserCredentials(null, user.getEmail(),new BCryptPasswordEncoder().encode(defaultPass), userTypeOpt.get());
             userDetailsRepository.save(userCredentials);
 
+            var subscriptionTypeOpt = subscriptionTypeRepository.findByProductKey(dto.getProductKey());
+
+            if (subscriptionTypeOpt.isEmpty()) {
+                throw new NotFoudException("SubscriptionType não encontrado");
+            }
+            user.setSubscriptionType(subscriptionTypeOpt.get());
+            userRepository.save(user);
+
             mailIntegration.send(user.getEmail(), "Usuario: " + user.getEmail() + " - Senha: " + defaultPass, "Acesso liberado");
             return true;
         }
 
         return false;
+    }
+
+    private Boolean getSucessPayment(PaymentProcessDto dto, User user) {
+        CustomerDto customerDto = wsRaspayIntegration.createCustomer(CustomerMapper.build(user));
+        OrderDto orderDto = wsRaspayIntegration.createOrder(OrderMapper.build(customerDto.getId(), dto));
+        PaymentDto paymentDto = PaymentMapper.build(customerDto.getId(), orderDto.getId(), CreditCardMapper.build(dto.getUserPaymentInfoDto(), user.getCpf()));
+        return wsRaspayIntegration.processPayment(paymentDto);
     }
 }
