@@ -8,6 +8,8 @@ import com.client.ws.ws.exception.NotFoudException;
 import com.client.ws.ws.mapper.SubscriptionTypeMapper;
 import com.client.ws.ws.model.SubscriptionType;
 import com.client.ws.ws.repository.SubscriptionTypeRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,15 +26,19 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
     }
 
     @Override
+    @Cacheable(value = "subscriptionType")
     public List<SubscriptionType> findAll() {
         return subscriptionTypeRepository.findAll();
     }
 
     @Override
+    @Cacheable(value = "subscriptionType", key = "#id")
     public SubscriptionType findById(Long id) {
         return getSubscriptionType(id);
     }
 
+    @Override
+    @CacheEvict(value = "subscriptionType", allEntries = true)
     public SubscriptionType create(SubscriptionTypeDto dto) {
         if (Objects.nonNull(dto.getId())) {
             throw new BadRequestException("Id deve ser nulo");
@@ -49,6 +55,7 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
     }
 
     @Override
+    @CacheEvict(value = "subscriptionType", allEntries = true)
     public void delete(Long id) {
         getSubscriptionType(id);
         subscriptionTypeRepository.deleteById(id);
