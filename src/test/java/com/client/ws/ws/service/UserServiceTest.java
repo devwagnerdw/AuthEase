@@ -1,6 +1,6 @@
 package com.client.ws.ws.service;
 
-import com.client.ws.ws.Service.UserService;
+import com.client.ws.ws.Service.UserDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,11 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class UserServiceTest {
 
     @Autowired
-    private UserService userService;
+    private UserDetailsService userDetailsService ;
 
 
     @Test
     void contextLoads() {
-        userService.sendRecoveryCode("email@tested.com");
+        userDetailsService.sendRecoveryCode("vagnerdw2@gmail.com");
     }
 }

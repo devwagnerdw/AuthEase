@@ -6,5 +6,5 @@ public interface UserDetailsService {
 
     UserCredentials loadUserByUsernameAndPass(String username, String pass);
 
-
+    Object sendRecoveryCode(String email);
 }
