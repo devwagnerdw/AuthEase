@@ -1,6 +1,6 @@
-package com.client.ws.ws.repository;
+package com.client.ws.ws.repository.jpa;
 
-import com.client.ws.ws.model.SubscriptionType;
+import com.client.ws.ws.model.jpa.SubscriptionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,6 +1,5 @@
-package com.client.ws.ws.model;
+package com.client.ws.ws.model.jpa;
 
-import com.client.ws.ws.dto.SubscriptionTypeDto;
 import jakarta.persistence.*;
 import lombok.*;
 

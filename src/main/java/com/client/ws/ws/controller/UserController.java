@@ -3,7 +3,7 @@ package com.client.ws.ws.controller;
 
 import com.client.ws.ws.Service.UserService;
 import com.client.ws.ws.dto.UserDto;
-import com.client.ws.ws.model.User;
+import com.client.ws.ws.model.jpa.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +25,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> create(@Valid @RequestBody UserDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(dto));
+    }
+
+    @PostMapping("/send-recovery-code")
+    public ResponseEntity<?> sendRecoveryCode(@RequestBody Object email) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.sendRecoveryCode(null));
     }
 
 }

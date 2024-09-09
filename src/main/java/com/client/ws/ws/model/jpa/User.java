@@ -1,4 +1,4 @@
-package com.client.ws.ws.model;
+package com.client.ws.ws.model.jpa;
 
 import jakarta.persistence.*;
 import lombok.*;

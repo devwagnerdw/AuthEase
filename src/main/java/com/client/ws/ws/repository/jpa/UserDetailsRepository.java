@@ -1,6 +1,6 @@
-package com.client.ws.ws.repository;
+package com.client.ws.ws.repository.jpa;
 
-import com.client.ws.ws.model.UserCredentials;
+import com.client.ws.ws.model.jpa.UserCredentials;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package com.client.ws.ws.Service;
 
 
-import com.client.ws.ws.model.UserType;
+import com.client.ws.ws.model.jpa.UserType;
 
 import java.util.List;
 

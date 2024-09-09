@@ -2,11 +2,9 @@ package com.client.ws.ws.controller;
 
 import com.client.ws.ws.Service.SubscriptionTypeService;
 import com.client.ws.ws.dto.SubscriptionTypeDto;
-import com.client.ws.ws.model.SubscriptionType;
+import com.client.ws.ws.model.jpa.SubscriptionType;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

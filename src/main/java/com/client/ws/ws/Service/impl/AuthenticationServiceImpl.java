@@ -7,7 +7,7 @@ import com.client.ws.ws.Service.UserDetailsService;
 import com.client.ws.ws.dto.LoginDto;
 import com.client.ws.ws.dto.TokenDto;
 import com.client.ws.ws.exception.BadRequestException;
-import com.client.ws.ws.model.UserCredentials;
+import com.client.ws.ws.model.jpa.UserCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ package com.client.ws.ws.configuration;
 
 import com.client.ws.ws.Service.TokenService;
 import com.client.ws.ws.filter.AuthenticationFilter;
-import com.client.ws.ws.repository.UserDetailsRepository;
+import com.client.ws.ws.repository.jpa.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

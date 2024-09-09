@@ -1,6 +1,6 @@
 package com.client.ws.ws.Service;
 
-import com.client.ws.ws.model.UserCredentials;
+import com.client.ws.ws.model.jpa.UserCredentials;
 
 public interface UserDetailsService {
 

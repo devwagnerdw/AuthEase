@@ -2,8 +2,8 @@ package com.client.ws.ws.Service.impl;
 
 
 import com.client.ws.ws.Service.UserTypeService;
-import com.client.ws.ws.model.UserType;
-import com.client.ws.ws.repository.UserTypeRepository;
+import com.client.ws.ws.model.jpa.UserType;
+import com.client.ws.ws.repository.jpa.UserTypeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

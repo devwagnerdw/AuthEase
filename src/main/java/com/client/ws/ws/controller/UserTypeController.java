@@ -2,7 +2,7 @@ package com.client.ws.ws.controller;
 
 
 import com.client.ws.ws.Service.UserTypeService;
-import com.client.ws.ws.model.UserType;
+import com.client.ws.ws.model.jpa.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

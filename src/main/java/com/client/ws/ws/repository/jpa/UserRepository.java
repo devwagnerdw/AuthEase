@@ -1,7 +1,6 @@
-package com.client.ws.ws.repository;
+package com.client.ws.ws.repository.jpa;
 
-import com.client.ws.ws.model.User;
-import jdk.jfr.Label;
+import com.client.ws.ws.model.jpa.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

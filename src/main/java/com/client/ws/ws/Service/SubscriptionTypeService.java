@@ -1,7 +1,7 @@
 package com.client.ws.ws.Service;
 
 import com.client.ws.ws.dto.SubscriptionTypeDto;
-import com.client.ws.ws.model.SubscriptionType;
+import com.client.ws.ws.model.jpa.SubscriptionType;
 
 import java.util.List;
 

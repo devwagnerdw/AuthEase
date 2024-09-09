@@ -3,8 +3,8 @@ package com.client.ws.ws.filter;
 
 import com.client.ws.ws.Service.TokenService;
 import com.client.ws.ws.exception.NotFoudException;
-import com.client.ws.ws.model.UserCredentials;
-import com.client.ws.ws.repository.UserDetailsRepository;
+import com.client.ws.ws.model.jpa.UserCredentials;
+import com.client.ws.ws.repository.jpa.UserDetailsRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
