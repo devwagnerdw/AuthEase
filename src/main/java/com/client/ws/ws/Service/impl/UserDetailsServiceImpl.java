@@ -1,6 +1,7 @@
 package com.client.ws.ws.Service.impl;
 
 import com.client.ws.ws.Service.UserDetailsService;
+import com.client.ws.ws.dto.UserDetailsDto;
 import com.client.ws.ws.exception.BadRequestException;
 import com.client.ws.ws.exception.NotFoudException;
 import com.client.ws.ws.integration.MailIntegration;
@@ -84,7 +85,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public boolean recoveryCodeIsValid(String recoveryCode, String email) {
 
         var userRecoveryCodeOpt = userRecoveryCodeRepository.findByEmail(email);
-        System.out.println(userRecoveryCodeOpt);
+
 
         if (userRecoveryCodeOpt.isEmpty()) {
             throw new NotFoudException("Usuário não encontrado");
@@ -96,6 +97,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         LocalDateTime now = LocalDateTime.now();
 
         return recoveryCode.equals(userRecoveryCode.getCode()) && now.isBefore(timeout);
+    }
+
+    @Override
+    public void updatePasswordByRecoveryCode(UserDetailsDto userDetailsDto) {
+
+        if (recoveryCodeIsValid(userDetailsDto.getRecoveryCode(), userDetailsDto.getEmail())) {
+            var userDetails = userDetailsRepository.findByUsername(userDetailsDto.getEmail());
+
+            UserCredentials userCredentials = userDetails.get();
+
+            userCredentials.setPassword(new BCryptPasswordEncoder().encode(userDetailsDto.getPassword()));
+
+            userDetailsRepository.save(userCredentials);
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.client.ws.ws.Service;
 
+import com.client.ws.ws.dto.UserDetailsDto;
 import com.client.ws.ws.model.jpa.UserCredentials;
 
 public interface UserDetailsService {
@@ -9,4 +10,6 @@ public interface UserDetailsService {
     void sendRecoveryCode(String email);
 
     boolean recoveryCodeIsValid(String recoveryCode, String email);
+
+    void updatePasswordByRecoveryCode(UserDetailsDto userDetailsDto);
 }
