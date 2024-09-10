@@ -9,6 +9,7 @@ import com.client.ws.ws.model.redis.UserRecoveryCode;
 import com.client.ws.ws.repository.jpa.UserDetailsRepository;
 import com.client.ws.ws.repository.redis.UserRecoveryCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ import java.util.Random;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+
+    @Value("${webservices.rasplus.redis.recoverycode.timetou}")
+    private String recoveryCodeTimeout;
 
     @Autowired
     private UserDetailsRepository userDetailsRepository;
@@ -88,10 +92,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserRecoveryCode userRecoveryCode = userRecoveryCodeOpt.get();
 
-        if (recoveryCode.equals(userRecoveryCode.getCode())) {
-            return true;
-        }
-        return false;
+        LocalDateTime timeout = userRecoveryCode.getCreationDate().plusMinutes(Long.parseLong(recoveryCodeTimeout));
+        LocalDateTime now = LocalDateTime.now();
+
+        return recoveryCode.equals(userRecoveryCode.getCode()) && now.isBefore(timeout);
     }
 
 }
