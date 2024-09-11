@@ -9,9 +9,9 @@ import com.client.ws.ws.model.jpa.UserCredentials;
 import com.client.ws.ws.model.redis.UserRecoveryCode;
 import com.client.ws.ws.repository.jpa.UserDetailsRepository;
 import com.client.ws.ws.repository.redis.UserRecoveryCodeRepository;
+import com.client.ws.ws.utils.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -44,9 +44,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserCredentials userCredentials = userCredentialsOpt.get();
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-        if (encoder.matches(pass, userCredentials.getPassword())) {
+        if (PasswordUtils.matches(pass, userCredentials.getPassword())) {
             return userCredentials;
         }
 
@@ -107,7 +105,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
             UserCredentials userCredentials = userDetails.get();
 
-            userCredentials.setPassword(new BCryptPasswordEncoder().encode(userDetailsDto.getPassword()));
+            userCredentials.setPassword(PasswordUtils.encode(userDetailsDto.getPassword()));
 
             userDetailsRepository.save(userCredentials);
         }

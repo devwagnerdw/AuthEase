@@ -3,7 +3,6 @@ package com.client.ws.ws.Service.impl;
 
 import com.client.ws.ws.Service.PaymentInfoService;
 import com.client.ws.ws.dto.PaymentProcessDto;
-
 import com.client.ws.ws.dto.wsraspay.CustomerDto;
 import com.client.ws.ws.dto.wsraspay.OrderDto;
 import com.client.ws.ws.dto.wsraspay.PaymentDto;
@@ -21,8 +20,8 @@ import com.client.ws.ws.model.jpa.User;
 import com.client.ws.ws.model.jpa.UserCredentials;
 import com.client.ws.ws.model.jpa.UserPaymentInfo;
 import com.client.ws.ws.repository.jpa.*;
+import com.client.ws.ws.utils.PasswordUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -80,7 +79,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             if (userTypeOpt.isEmpty()) {
                 throw new NotFoudException("UserType não encontrado");
             }
-            UserCredentials userCredentials = new UserCredentials(null, user.getEmail(),new BCryptPasswordEncoder().encode(defaultPass), userTypeOpt.get());
+            UserCredentials userCredentials = new UserCredentials(null, user.getEmail(), PasswordUtils.encode(defaultPass), userTypeOpt.get());
             userDetailsRepository.save(userCredentials);
 
             var subscriptionTypeOpt = subscriptionTypeRepository.findByProductKey(dto.getProductKey());

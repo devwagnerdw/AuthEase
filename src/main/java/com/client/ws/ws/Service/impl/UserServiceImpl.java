@@ -8,14 +8,12 @@ import com.client.ws.ws.exception.NotFoudException;
 import com.client.ws.ws.mapper.UserMapper;
 import com.client.ws.ws.model.jpa.User;
 import com.client.ws.ws.model.jpa.UserType;
-import com.client.ws.ws.model.redis.UserRecoveryCode;
 import com.client.ws.ws.repository.jpa.UserRepository;
 import com.client.ws.ws.repository.jpa.UserTypeRepository;
 import com.client.ws.ws.repository.redis.UserRecoveryCodeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Random;
 
 @Service
 public class UserServiceImpl implements UserService {
