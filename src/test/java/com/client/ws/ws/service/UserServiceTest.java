@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -49,7 +49,10 @@ class UserServiceTest {
         user.setUserType(userType);
         when(userRepository.save(user)).thenReturn(user);
 
-        Assertions.assertEquals(user,userService.create(dto)); ;
+        Assertions.assertEquals(user,userService.create(dto));
+
+        verify(userTypeRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).save(user);
     }
 
 
