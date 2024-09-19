@@ -9,7 +9,7 @@ import com.client.ws.ws.model.jpa.UserType;
 import com.client.ws.ws.repository.jpa.UserRepository;
 import com.client.ws.ws.repository.jpa.UserTypeRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,10 +29,10 @@ class UserServiceTest {
     @InjectMocks
     private UserServiceImpl userService;
 
-    private static  UserDto dto;
+    private UserDto dto;
 
-    @BeforeAll
-    public static   void loadUser() {
+    @BeforeEach
+    public void loadUser() {
         dto = new UserDto();
         dto.setId(1L);
         dto.setEmail("felipe@email.com");
@@ -41,7 +41,7 @@ class UserServiceTest {
     }
 
     @Test
-    void given_create_when_idIsNullAndUserTypeIsFound_then_returnUserCreated(){
+    void given_create_when_idIsNullAndUserTypeIsFound_then_returnUserCreated() {
         UserType userType = new UserType(1L, "Aluno", "Aluno da plataforma");
 
         when(userTypeRepository.findById(1L)).thenReturn(Optional.of(userType));
@@ -62,9 +62,6 @@ class UserServiceTest {
 
     @Test
     void given_create_when_idIsNotNull_then_throwBadRequestException(){
-
-
-
         Assertions.assertThrows(BadRequestException.class, () -> userService.create(dto));
 
         verify(userTypeRepository, times(0)).findById(any());
