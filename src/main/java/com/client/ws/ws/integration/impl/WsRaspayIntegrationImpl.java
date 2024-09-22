@@ -1,5 +1,6 @@
 package com.client.ws.ws.integration.impl;
 
+import com.client.ws.ws.exception.HttpClientException;
 import com.client.ws.ws.integration.WsRaspayIntegration;
 import com.client.ws.ws.dto.wsraspay.CustomerDto;
 import com.client.ws.ws.dto.wsraspay.OrderDto;
@@ -46,7 +47,7 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
                     restTemplate.exchange(raspayHost+customerUrl, HttpMethod.POST, request, CustomerDto.class);
             return response.getBody();
         } catch (Exception e) {
-            throw e;
+            throw new HttpClientException(e.getLocalizedMessage());
         }
     }
 
@@ -58,7 +59,7 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
                     restTemplate.exchange(raspayHost+orderUrl, HttpMethod.POST, request, OrderDto.class);
             return response.getBody();
         } catch (Exception e) {
-            throw e;
+            throw new HttpClientException(e.getLocalizedMessage());
         }
     }
 
@@ -70,7 +71,7 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
                     restTemplate.exchange(raspayHost+paymentUrl, HttpMethod.POST, request, Boolean.class);
             return response.getBody();
         } catch (Exception e) {
-            throw e;
+            throw new HttpClientException(e.getLocalizedMessage());
         }
     }
 
