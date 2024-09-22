@@ -35,7 +35,7 @@ class UserServiceTest {
     public void loadUser() {
         dto = new UserDto();
         dto.setId(1L);
-        dto.setEmail("felipe@email.com");
+        dto.setEmail("vagnerdw1@email.com");
         dto.setCpf("11111111111");
         dto.setUserTypeId(1L);
     }
