@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserDetailsServiceTest {
 
-    private static final String USERNAME_ALUNO = "felipe@email.com";
+    private static final String USERNAME_ALUNO = "vagne@email.com";
     private static final String PASSWORD_ALUNO = "senha123";
     private static final String RECOVERY_CODE_ALUNO = "4065";
 
@@ -112,6 +112,8 @@ class UserDetailsServiceTest {
         assertTrue(userDetailsService.recoveryCodeIsValid(RECOVERY_CODE_ALUNO, USERNAME_ALUNO));
         verify(userRecoveryCodeRepository,times(1)).findByEmail(USERNAME_ALUNO);
     }
+
+
     private UserRecoveryCode getUserRecoveryCode() {
         return new UserRecoveryCode(UUID.randomUUID().toString(), USERNAME_ALUNO, RECOVERY_CODE_ALUNO, LocalDateTime.now());
     }
