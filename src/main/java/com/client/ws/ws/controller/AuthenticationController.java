@@ -41,7 +41,7 @@ public class AuthenticationController {
     }
 
     @PatchMapping("/recovery-code/password")
-    public ResponseEntity<?> sendRecoveryCode(@RequestBody @Valid UserDetailsDto dto) {
+    public ResponseEntity<?> updatePasswordByRecoveryCode(@RequestBody @Valid UserDetailsDto dto) {
         userDetailsService.updatePasswordByRecoveryCode(dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }

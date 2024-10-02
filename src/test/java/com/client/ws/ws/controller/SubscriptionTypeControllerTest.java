@@ -47,7 +47,7 @@ class SubscriptionTypeControllerTest {
     }
 
     @Test
-    void given_findById_whenGetId2_then_returnOneSubscriptionType() throws Exception {
+    void given_findById_when_getId2_then_returnOneSubscriptionType () throws Exception {
         SubscriptionType subscriptionType = new SubscriptionType(2L, "VITALICIO", null,
                 BigDecimal.valueOf(997), "FOREVER2022");
         when(subscriptionTypeService.findById(2L)).thenReturn(subscriptionType);
