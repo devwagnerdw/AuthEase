@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,6 +22,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 
 
 @AutoConfigureTestDatabase
@@ -30,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles(profiles = "test")
 class AuthenticationControllerTest {
+
     private static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
     @Autowired
     private ObjectMapper objectMapper;
@@ -39,6 +42,7 @@ class AuthenticationControllerTest {
     private AuthenticationService authenticationService;
     @MockBean
     private UserDetailsService userDetailsService;
+
     @Test
     void given_auth_when_dtoIsOk_then_returnTokenDto() throws Exception {
         LoginDto dto = new LoginDto("usuario@usuario.com","pass");
@@ -52,6 +56,7 @@ class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.token",is(TOKEN)))
                 .andExpect(jsonPath("$.type",is("Bearer")));
     }
+
     @Test
     void given_auth_when_dtoIsMissingValues_then_returnBadRequest() throws Exception {
         LoginDto dto = new LoginDto(""," ");
@@ -64,6 +69,7 @@ class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.httpStatus",is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.statusCode",is(400)));
     }
+
     @Test
     void given_sendRecoveryCode_when_dtoIsOk_then_returnNoContent() throws Exception {
         UserRecoveryCode dto = new UserRecoveryCode();
@@ -73,6 +79,7 @@ class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isNoContent());
     }
+
     @Test
     void given_sendRecoveryCode_when_emailIsNotSentOrWrong_then_returnBadRequest() throws Exception {
         UserRecoveryCode dto = new UserRecoveryCode();
@@ -85,6 +92,7 @@ class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.httpStatus",is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.statusCode",is(400)));
     }
+
     @Test
     void given_updatePasswordByRecoveryCode_when_dtoIsOk_then_returnNoContent() throws Exception {
         UserDetailsDto dto = new UserDetailsDto();
@@ -96,6 +104,7 @@ class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isNoContent());
     }
+
     @Test
     void given_updatePasswordByRecoveryCode_when_emailIsWrongAndPassIsNull_then_returnBadRequest() throws Exception {
         UserDetailsDto dto = new UserDetailsDto();
@@ -109,5 +118,14 @@ class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.message",is("[password=atributo inválido, email=inválido]")))
                 .andExpect(jsonPath("$.httpStatus",is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.statusCode",is(400)));
+    }
+
+    @Test
+    void given_updatePasswordByRecoveryCode_then_returnOk() throws Exception {
+        when(userDetailsService.recoveryCodeIsValid("1234", "usuario@usuario")).thenReturn(true);
+        mockMvc.perform(get("/auth/recovery-code/").param("recoveryCode","1234")
+                        .param("email","usuario@usuario"))
+                .andExpect(status().isOk());
+        verify(userDetailsService, times(1)).recoveryCodeIsValid("1234","usuario@usuario");
     }
 }
